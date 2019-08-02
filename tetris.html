@@ -1,0 +1,1496 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>俄罗斯方块</title>
+<style type="text/css">
+body{ 
+	text-align : center; 
+}
+#main{ 
+	text-align : center;
+	background-color : #FAF0E6;
+	margin : 0 auto;
+	margin-top : 80px;
+	outline : none;
+}
+#bar{
+    position: absolute;
+    left: 50%;
+    top:30px;
+    *top:40px;
+    width: 400px;
+    margin-left: -200px;
+    z-index: 10;
+}
+
+#bar ul{
+    background: #808080;
+    list-style: none;
+    margin: 0;
+    padding: 1px;
+    border-radius: 15px;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+#bar ul:after{
+    content: "";
+    display: table;
+    clear: both;
+}
+#bar li{
+    float: left;
+    list-style: none;
+    line-height: 30px;
+    padding: 0 10px;
+}
+#bar li.on{
+    background: #FAF0E6;
+    font-weight: bold;
+    border-radius: 15px;
+}
+#bar li:hover,#bar li a:hover {
+    background: #FAF0E6;
+    border-radius: 15px;
+    color: red;
+}
+#bar li a{
+    color:#fff;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+#bar li.on a{
+    color: red;
+}
+.square
+{
+	border-top : 1px #A9A9A9 solid;
+	border-left : 1px #A9A9A9 solid;
+	background-color : #808080;
+	float : left;
+}
+.light0
+{
+	/*洋红*/
+	background-color : #FF00FF;
+}
+.light1
+{
+	/*亮绿*/
+	background-color : #00FA9A;
+}
+.light2
+{
+	/*暗橙*/
+	background-color : #FF8C00;
+}
+.light3
+{
+	/*金黄*/
+	background-color : #FFD700;
+}
+.light9
+{
+	/*消行闪现颜色*/
+	background-color : #fff;
+}
+.screen
+{
+	margin : 0 auto; 
+	border : 1px #2F4F4F dotted;
+	position : relative;
+}
+.board
+{
+	border : 1px #2F4F4F dotted;
+	position : absolute;
+	z-index : 1;
+}
+.scoreBoard
+{
+	margin-bottom : 10px;
+	text-align : center;
+}
+.scoreBoard .title
+{
+	font-weight : bold;
+	text-align : center;
+	color : #B0C4DE;
+	font-family:"Tahoma","Arial";
+	margin-bottom : 5px;
+}
+.scoreBoard em
+{
+	color : red;
+	font-family:"Tahoma","Arial";
+	font-size : 12px;
+	font-weight : bold;
+}
+.btn
+{
+	background-color : yellow;
+	color : red;
+	width : 80px;
+	height : 30px;
+	font-size : 14px;
+	font-weight : bold;
+	text-align : center;
+	line-height : 30px;
+	cursor : pointer;
+	margin : 0 auto;
+	margin-bottom : 10px;
+}
+.boardTitle
+{
+	color : #20B2AA;
+	width : 80px;
+	height : 30px;
+	font-size : 14px;
+	font-weight : bold;
+	text-align : center;
+	line-height : 30px;
+	margin : 0px auto;
+	margin-bottom : 10px;
+	border-bottom : 1px red solid;
+}
+#keyBoard .value, #levelBoard .value
+{
+	margin-bottom:3px;
+	font-size:12px;
+}
+#keyBoard .value input
+{
+	width:55px;
+	height:14px;
+	text-align:center;
+	font-size : 12px;
+}
+#levelBoard .value select
+{
+	width:40px;
+	height:18px;
+	text-align:left;
+}
+#historyRecord .head
+{
+	height:15px;
+	width:100%;
+	margin-bottom:5px;
+}
+#historyRecord .record
+{
+	height:15px;
+	width:100%;
+	margin-bottom:4px;
+}
+#historyRecord .head span
+{
+	width:33%;
+	float:left;
+	font-size:12px;
+}
+#historyRecord .record span
+{
+	width:33%;
+	float:left;
+	font-size:12px;
+}
+#historyRecord .record span em
+{
+	font-size:10px;
+	color:#133A7B; 
+	font-family:"Tahoma","Arial";
+	font-weight:bold;
+}
+#topInfo{
+	border : 0px;
+	position : absolute;
+	z-index : 1;
+	color : red;
+	font-weight : bold;
+	font-size : 20px;
+	line-height : 80px;
+	top : -80px;
+	left : 50%;
+	width : 200px;
+	height : 80px;
+	margin-left : -100px;
+    letter-spacing: 15px;
+}
+#bottomInfo
+{
+	border : 0px;
+	position : absolute;
+	z-index : 1;
+	bottom : -80px;
+	left : 50%;
+	width : 400px;
+	height : 80px;
+	margin-left : -200px;
+}
+#bottomInfo div
+{
+	margin-top : 20px;
+	line-height : 20px;
+	color : #ccc;
+	font-family : Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size : 14px;
+}
+.upgradeMsg
+{
+	width:100px;
+	height:30px;
+	top:235px;
+	left:50%;
+	margin-left:-50px;
+	background-color:#33ffff;
+	color:#fcf;
+	font-size:12px;
+	text-align:center;
+	line-height:30px;
+	filter: alpha(opacity=0);
+	opacity: 0;
+}
+.gameOverMsg
+{
+	width:200px;
+	height:45px;
+	top:138px;
+	left:50%;
+	margin-left:-100px;
+	background-color:#fff;
+	color:#990000;
+	font-size:18px;
+	font-weight:bold;
+	text-align:center;
+	line-height:45px;
+	filter: alpha(opacity=80);
+	opacity: 0.8;
+}
+</style>
+<script type="text/javascript">
+	tetrisDesc = (function(){
+		var util = {
+			dom : document,
+			cache : {},
+			$ : function(id){
+				return util.cache[id] || (util.cache[id] = util.dom.getElementById(id));
+			},
+			addClass : function(e,classes){
+				e.className = e.className + " " + classes;
+				return e;
+			},
+			removeClass : function(e,classes){
+				var cn = e.className,
+					cs = classes.split(" "),
+					cns = cn.split(" ");
+				for(var c in cs)
+				{
+					//从尾部开始匹配删除，只匹配一次
+					for(var i = cns.length - 1; i >= 0; i --){
+						if(cs[c] == cns[i])
+						{
+							cns[i] = "";
+							break;
+						}
+					}
+				}
+				e.className = cns.join(" ");
+				return e;
+			},
+			addHandler : function(e,type,handler){
+				if(e.addEventListener){
+					e.addEventListener(type,handler,false);
+				}
+				else if(e.attachEvent){
+					e.attachEvent("on" + type, handler);
+				}
+				else{
+					e["on" + type] = handler;
+				}
+			},
+			removeHandler : function(e,type,handler){
+				if(e.removeEventListener){
+					e.removeEventListener(type,handler,false);
+				}
+				else if(e.detachEvent){
+					e.detachEvent("on" + type, handler);
+				}
+				else{
+					e["on" + type] = null;
+				}
+			},
+			getKeyCode : function(event){
+				event = event || window.event;
+				return event.which ? event.which : event.keyCode;
+			},
+			stopPropagation : function(event){
+				event = event || window.event;
+				if(event.stopPropagation)
+					event.stopPropagation();
+				else
+					event.cancelBubble = true;
+			},
+			preventDefault : function(event){
+				event = event || window.event;
+				if (event.preventDefault)
+					event.preventDefault();
+				else
+					event.returnValue = false;
+			}
+		}
+		var modelFactory = (function(){
+			var countModelSize = function(coord){
+				var w = 0,h = 0;
+				for(var i in coord){
+					if(coord[i][0] > w){
+						w = coord[i][0];
+					}
+					if(coord[i][1] > h){
+						h = coord[i][1];
+					}
+				}
+				return {w : w, h : h};
+			}
+			var Model = function(coord){
+				coord ? this.setCoord(coord) : this.coord = [];
+				this.size = countModelSize(this.coord);
+			}
+			Model.prototype.setCoord = function(coord){
+				for(var i in coord){
+					this.coord[i] = [coord[i][0],coord[i][1]];
+				}
+				this.size = countModelSize(this.coord);
+			}
+			Model.prototype.rotate90 = function(){
+				// x = 原y轴最大值 - 原y
+				// y = 原x
+				for(var i in this.coord){
+					var ci = this.coord[i],
+						_x = ci[0],
+						_y = ci[1];
+					ci[0] = this.size.h - _y;
+					ci[1] = _x;
+				}
+				this.size = countModelSize(this.coord);
+			}
+			Model.prototype.rotate180 = function(){
+				// x = 原x轴最大值 - 原x
+				// y = 原y轴最大值 - 原y
+				for(var i in this.coord){
+					var ci = this.coord[i],
+						_x = ci[0],
+						_y = ci[1];
+					ci[0] = this.size.w - _x;
+					ci[1] = this.size.h - _y;
+				}
+				this.size = countModelSize(this.coord);
+			}
+			Model.prototype.rotate270 = function(){
+				// x = 原y
+				// y = 原x轴最大值 - 原x
+				for(var i in this.coord){
+					var ci = this.coord[i],
+						_x = ci[0],
+						_y = ci[1];
+					ci[0] = _y;
+					ci[1] = this.size.w - _x;
+				}
+				this.size = countModelSize(this.coord);
+			}
+			Model.prototype.rotate360 = function(){
+				// x = 原x
+				// y = 原y
+				this.size = countModelSize(this.coord);
+			}
+			var _7kind = [
+				[[0,0],[0,1],[0,2],[0,3]],	//I型
+				[[0,0],[0,1],[1,0],[1,1]],	//O型
+				[[0,0],[1,0],[2,0],[1,1]],	//T型
+				[[0,0],[1,0],[1,1],[1,2]],	//L型
+				[[0,0],[0,1],[0,2],[1,0]],	//J型
+				[[0,0],[1,0],[1,1],[2,1]],	//Z型
+				[[1,0],[1,2],[1,1],[0,1]]	//S型
+			];
+			var assistModel = new Model();
+			return {
+				assistModel : function(){
+					return assistModel;
+				},
+				newModel : function(){
+					return new Model();
+				},
+				newCoord : function(){
+					var r1 = parseInt(Math.random() * _7kind.length),
+						r2 = parseInt(Math.random() * 4);
+					assistModel.setCoord(_7kind[r1]);
+					switch(r2)
+					{
+						case 0 : assistModel.rotate90();	break;
+						case 1 : assistModel.rotate180();	break;
+						case 2 : assistModel.rotate270();	break;
+						case 3 : assistModel.rotate360();
+					}
+					return assistModel.coord;
+				}
+			}
+		})()
+
+		var Screen = function(r,c,l,id,fn){
+			this.r = r;		//r:屏幕行数
+			this.c = c;		//c:屏幕列数
+			this.l = l;		//l:小方块边长
+			this.id = id;
+			this.fn = fn;
+		}
+		Screen.prototype.getW = function(){
+			return this.c * (this.l + 1) + 1;
+		}
+		Screen.prototype.getH = function(){
+			return this.r * (this.l + 1) + 1;
+		}
+		Screen.prototype.render = function(){
+			var innerHTML = [];
+			for(var i = 0; i < this.r * this.c; i ++)
+			{
+				var x = i % this.c,
+					y = Math.floor(i / this.c),
+					l = this.l,r = this.r, c = this.c,
+					ar = [];
+				ar.push("<div id='");
+				ar.push(x + "_" + y + "_" + this.id);
+				ar.push("' class='square' style='width:");
+				ar.push(l);
+				ar.push("px;height:");
+				ar.push(l);
+				ar.push("px;");
+				if(x == c - 1)
+				{
+					ar.push("border-right : 1px #B0C4DE solid;");
+				}
+				if(y == r - 1)
+				{
+					ar.push("border-bottom : 1px #B0C4DE solid;");
+				}
+				ar.push("'></div>");
+				innerHTML.push(ar.join(""));
+			}
+			return innerHTML.join("");
+		}
+		Screen.prototype.show = function(r,c,l,id){
+			this.r = r || this.r;
+			this.c = c || this.c;
+			this.l = l || this.l;
+			this.id = id || this.id;
+			this.e = util.dom.createElement("div");
+			this.e.style.width = this.getW() + "px";
+			this.e.style.height = this.getH() + "px";
+			this.e.innerHTML = this.render();
+			if(typeof this.fn == 'function')
+			{
+				this.fn();
+			}
+		}
+		Screen.prototype.sq = function(x,y){
+			var s = this,
+				e = util.$(x + "_" + y + "_" + s.id);
+			return {
+				show : function(type){
+					if(e && typeof type != "undefined")
+						util.addClass(e,"light" + type);
+				},
+				hide : function(type){
+					if(e)
+						if(typeof type != "undefined")
+							util.removeClass(e,"light" + type);
+						else
+							e.className = "square";
+				},
+				getType : function(){
+					var type = e.className.match(/\d+\s*$/g);
+					if(type)
+						return parseInt(type[0]);
+					else
+						return null;
+				}
+			}
+		}
+		//主屏幕
+		var	mainScreen = (function(){
+			var screen = new Screen(20,10,22,"mS",function(){
+				this.e.className = "screen";
+				util.$("main").appendChild(this.e);
+				this.resetCoord();
+			});
+			//获取当前下坠的方块与底部的距离
+			var getSpaceBottom = function(){
+				var m = screen.tetris.model,
+					md = screen.r,
+					xS = screen.tetris.offset[0],
+					xE = screen.tetris.offset[0] + m.size.w;
+				var getYS = function(x){
+					var mcoord = m.coord.join("-");
+					for(var y = m.size.h; y >= 0; y --){
+						if(mcoord.indexOf([x,y].toString()) > -1)
+						{
+							return screen.tetris.offset[1] + y + 1;
+						}
+					}
+				}
+				for(var j = xS; j <= xE; j ++)
+				{
+					var d = 0,
+						yS = getYS(j - screen.tetris.offset[0]),
+						yE = screen.r - 1;
+					for(var i = yS; i <= yE; i ++){
+						if(i < 0 || false === screen.getCoord(j,i))
+							++ d;
+						else
+							break;
+					}
+					if(d < md) md = d;
+				}
+				return md;
+			}
+			//获取当前下坠的方块与左边的距离
+			var getSpaceLeft = function(){
+				var m = screen.tetris.model,
+					md = screen.c,
+					yS = screen.tetris.offset[1],
+					yE = screen.tetris.offset[1] + m.size.h;
+				var getXS = function(y){
+					var mcoord = m.coord.join("-");
+					for(var x = 0; x <= m.size.w; x ++){
+						if(mcoord.indexOf([x,y].toString()) > -1)
+						{
+							return screen.tetris.offset[0] + x - 1;
+						}
+					}
+				}
+				for(var j = yS; j <= yE; j ++)
+				{
+					var d = 0,
+						xS = getXS(j - screen.tetris.offset[1]);
+					if(j < 0){
+						d = xS + 1;
+					}
+					else
+					{
+						for(var i = xS; i >= 0; i --){
+							if(false === screen.getCoord(i,j))
+								++ d;
+							else
+								break;
+						}
+					}
+					if(d < md) md = d;
+				}
+				return md;
+			}
+			//获取当前下坠的方块与右边的距离
+			var getSpaceRight = function(){
+				var m = screen.tetris.model,
+					md = screen.c,
+					yS = screen.tetris.offset[1],
+					yE = screen.tetris.offset[1] + m.size.h;
+				var getXS = function(y){
+					var mcoord = m.coord.join("-");
+					for(var x = m.size.w; x >= 0; x --){
+						if(mcoord.indexOf([x,y].toString()) > -1)
+						{
+							return screen.tetris.offset[0] + x + 1;
+						}
+					}
+				}
+				for(var j = yS; j <= yE; j ++)
+				{
+					var d = 0,
+						xS = getXS(j - screen.tetris.offset[1]),
+						xE = screen.c - 1;
+					if(j < 0){
+						d = xE - xS + 1;
+					}
+					else
+					{
+						for(var i = xS; i <= xE; i ++){
+							if(false === screen.getCoord(i,j))
+								++ d;
+							else
+								break;
+						}
+					}
+					if(d < md) md = d;
+				}
+				return md;
+			}
+			//获取当前下坠的方块旋转后与左右上下的距离
+			//返回值为以下2种:
+			//false	(不可以旋转)
+			//数组	(可以旋转,旋转后，横向和纵向偏移量修正)
+			var getSpaceRotate = function(){
+				var t = screen.tetris,
+					m = t.model,
+					s = m.size.w >  m.size.h ?  m.size.w :  m.size.h;
+					l = t.offset[0],
+					r = t.offset[0] + s,
+					u = t.offset[1],
+					d = t.offset[1] + s,
+					f = true;
+				for(var x = l; x <= r; x ++){
+					for(var y = u; y <= d; y ++){
+						if(true === screen.getCoord(x,y)){
+							//只要旋转区域内有一个位置被占用,则无法旋转
+							f = false;
+							break;
+						}
+					}
+				}
+				if(f){
+					//如果旋转后超出屏幕右边缘,横向位置修正
+					var offsetX = t.offset[0] + s + 1 - screen.c;
+					offsetX = offsetX > 0 ? offsetX = - offsetX : 0;
+					return [offsetX,0];
+				}
+				else
+					return false;
+			}
+			//记录已下跌的方块坐标
+			var recordFinishTetris = function(){
+				var m = screen.tetris.model,
+					offset = screen.tetris.offset;
+				for(var c in m.coord){
+					var sq = m.coord[c];
+					screen.coord[sq[0] + offset[0]][sq[1] + offset[1]] = true;
+				}
+			}
+			//消行算法
+			var clearRowsOfFull = (function(){
+				//记录要消除的行下标,如果要消除的行下标不连续,分组记录。
+				//比如需要消除的行序是16,18,19;那么返回的是[[16],[18,19]],因为16和18不连续,分组记录
+				var getYArray = function(yS, yE){
+					var	array = [],
+						ca = [];
+					for(var y = yS; y <= yE; y++){
+						var f = true;
+						for(var x = 0; x <= screen.c - 1; x ++){
+							if(true === screen.getCoord(x,y))
+								continue;
+							else
+							{
+								f = false;
+								break;
+							}
+						}
+						if(f){
+							if(ca.length == 0 || (ca[ca.length - 1] + 1) == y)
+								ca.push(y);
+							else
+							{
+								array.push(ca);
+								ca = [y];
+							}
+						}
+					}
+
+					if(ca.length > 0)
+						array.push(ca);
+
+					return array;
+				}
+				//在消行前保存需要下跌的方块坐标，计算消行后下跌的方块坐标
+				var recordCoords = function(yArray){
+					var ba = [],
+						aa = [],
+						uy = 0,
+						s = screen;
+					for(var i in yArray){
+						var ya = yArray[i],
+							dy = ya[0] - 1,
+							r = ya.length;
+						for(var j in aa){
+							aa[j][1] += r;
+						}
+						for(var y = dy; y >= uy; y --){
+							for(var x = 0; x < s.c; x ++){
+								var type = s.sq(x,y).getType();
+								if(type != null){
+									ba.push([x,y]);
+									aa.push([x,(y + r),type]);
+								}
+							}
+						}
+						uy = ya[ya.length - 1] + 1;
+					}
+					return [ba,aa];
+				}
+				//消行动画
+				var animationOfClear = function(ya){
+					var time = 3,
+						speed = 80;
+					(function(){
+						for(var i in ya){
+							var y = ya[i];
+							for(var x = 0; x < screen.c; x ++){
+								time%2 == 1
+									? screen.sq(x,y).show(9)
+									: screen.sq(x,y).hide(9);
+							}
+						}
+						if(time -- > 0)
+							setTimeout(arguments.callee,speed);
+					})();
+				}
+				//消行,下跌
+				var clearRowsAndDownRemain = function(yArray,downCoords){
+					var ya = yArray.join(",").split(",");
+					animationOfClear(ya);
+					screen.clearRow(ya);
+					var hides = downCoords[0],
+						shows = downCoords[1];
+					for(var i in hides){
+						var c = hides[i];
+						screen.sq(c[0],c[1]).hide();
+						screen.coord[c[0]][c[1]] = false;
+					}
+					for(var j in shows){
+						var c = shows[j];
+						screen.sq(c[0],c[1]).show(c[2]);
+						screen.coord[c[0]][c[1]] = true;
+					}
+				}
+				//计算消行后是否有级联下跌的模块,有的话,下跌偏移量,返回模块的纵向最小和最大y值
+				var getDownYSyE = function(yArray){
+					var y = Math.max.apply(null,yArray.join().split(","));
+					return [0,0];
+				}
+				return {
+					todo : function(yS, yE){
+						var yArray = getYArray(yS, yE);
+						if(yArray.length > 0)
+						{
+							var downCoords = recordCoords(yArray);
+							clearRowsAndDownRemain(yArray, downCoords);
+							return yArray.join().split(",").length + arguments.callee.apply(this,getDownYSyE(yArray));
+						}
+						else
+						{
+							return 0;
+						}
+					}
+				}
+			})()
+			screen.resetCoord = function(){
+				this.coord = new Array(this.c);
+				for(var x = 0; x < this.coord.length; x ++){
+					this.coord[x] = new Array(this.r);
+					for(var y = 0; y < this.coord[x].length; y ++){
+						this.coord[x][y] = false;
+					}
+				}
+			}
+			screen.getCoord = function(x,y){
+				if(this.coord[x])
+					return this.coord[x][y];
+				else
+					return null;
+			}
+			screen.clearScreen = function(){
+				for(var x = 0; x < this.c; x ++){
+					for(var y = 0; y < this.r; y ++)
+					{
+						this.sq(x,y).hide();
+						this.coord[x][y] = false;
+					}
+				}
+			}
+			screen.clearRow = function(ya){
+				for(var x = 0; x < this.c; x ++){
+					for(var y in ya){
+						this.sq(x,ya[y]).hide();
+						this.coord[x][ya[y]] = false;
+					}
+				}
+			}
+			screen.gameOver = function(){
+
+				var t = this.thread;
+				t.stop();
+				tipScreen.clearScreen();
+				historyRecord.record(scoreBoard.getScore());
+
+				var y = this.r - 1;
+				(function(){
+					for(var x = 0; x < screen.c; x ++){
+						if(!t.isAlive())
+						{
+							screen.sq(x,y).hide();
+							screen.sq(x,y).show((Math.floor(y/4))%4);
+							screen.coord[x][y] = true;
+						}
+					}
+					if(y -- > 0)
+						setTimeout(arguments.callee,70);
+				})();
+				messageBox.showGameOver();
+			}
+			screen.tetris = {
+				left : function(){
+					if(getSpaceLeft() > 0)
+					{
+						this.hide();
+						-- this.offset[0];
+						this.show();
+					}
+				},
+				right : function(){
+					if(getSpaceRight() > 0)
+					{
+						this.hide();
+						++ this.offset[0];
+						this.show();
+					}
+				},
+				down : function(){
+					if(getSpaceBottom() > 0)
+					{
+						this.hide();
+						++ this.offset[1];
+						this.show();
+					}
+					else if(this.offset[1] > 0)
+					{
+						recordFinishTetris();
+						//消行
+						var cr = clearRowsOfFull.todo(this.offset[1],this.offset[1] + this.model.size.h);
+						scoreBoard.setLines(cr);
+						tipScreen.tetris.next();
+					}
+					else
+						screen.gameOver();
+				},
+				rotate : function(){
+					var m = this.model;
+					var _offset = getSpaceRotate();
+					if(false !== _offset)
+					{
+						this.hide();
+						var _h = m.size.h;
+						m.rotate90();
+						//旋转后，方块高度可能会变化，方块在屏幕中的纵向位置需修正:
+						//方块高度与旋转前比较，如果高了，减去高的差值，低了，加上低的差值
+						this.offset[1] += _h - m.size.h;
+						//旋转后，方块可能超出屏幕，做位置修正
+						this.offset[0] += _offset[0];
+						this.offset[1] += _offset[1];
+						this.show();
+					}
+				},
+				plummet : function(){
+					var cr = 0;
+					if(getSpaceBottom() > 0)
+					{
+						this.hide();
+						this.offset[1] += getSpaceBottom();
+						this.show();
+						recordFinishTetris();
+						//消行
+						cr = clearRowsOfFull.todo(this.offset[1],this.offset[1] + this.model.size.h);
+						scoreBoard.setLines(cr);
+					}
+					if(this.offset[1] + cr > 0)
+					{
+						tipScreen.tetris.next();
+					}
+					else
+						screen.gameOver();
+				},
+				show : function(){
+					var m = this.model;
+					if(m)
+					{
+						for(var i in m.coord)
+						{
+							var sq = m.coord[i];
+							screen.sq(sq[0] + this.offset[0],sq[1] + this.offset[1]).show(this.c);
+						}
+					}
+				},
+				hide : function(){
+					var m = this.model;
+					if(m)
+					{
+						for(var i in m.coord)
+						{
+							var sq = m.coord[i];
+							screen.sq(sq[0] + this.offset[0], sq[1] + this.offset[1]).hide(this.c);
+						}
+					}
+				}
+			}
+			screen.acceptModelData = function(c,coord){
+				var t = this.tetris;
+				t.c = c;
+				if(!t.model)
+				{
+					//如果方块模型不存在,新生成方块模型
+					t.model = modelFactory.newModel();
+				}
+				t.model.setCoord(coord);
+
+				//偏移量
+				//为了一开始让方块居中出现,对坐标做偏移量
+				//横向偏移量(向右偏移) = 屏幕宽度/2 - 方块宽度/2
+				//纵向偏移量(向上偏移) = - 1;向上偏移1位，因为在down方法中，show之前偏移量已经加1
+				t.offset = [Math.floor((this.c + 1)/2 - (t.model.size.w + 1)/2), -1 - t.model.size.h];
+			}
+			screen.thread = (function(){
+				var time = null,
+					speed = 1000,
+					pause = true;
+					isAlive = false;
+				var todo = function(){
+					screen.tetris.down();
+					if(!pause)
+					{
+						time = setTimeout(arguments.callee,speed);
+					}
+				}
+				return {
+					start : function(){
+						clearTimeout(time);
+						pause = false;
+						isAlive = true;
+						todo();
+					},
+					stop : function(){
+						clearTimeout(time);
+						isAlive = false;
+						pause = true;
+					},
+					pause : function(){
+						clearTimeout(time);
+						pause = true;
+					},
+					goon : function(){
+						clearTimeout(time);
+						pause = false;
+						todo();
+					},
+					isPause : function(){
+						return pause;
+					},
+					isAlive : function(){
+						return isAlive;
+					},
+					setSpeed : function(_speed){
+						speed = _speed;
+					}
+				}
+			})()
+			return screen;
+		})()
+
+		//主屏与左右边的间隔
+		var spaceing = 2 * 22;
+		//小屏幕(该屏幕显示接下来即将出现的方块)
+		var tipScreen = (function(){
+			var screen = new Screen(6,6,mainScreen.l,"tS",function(){
+				this.e.className = this.e.className + " board";
+				this.e.style.top = "0px";
+				this.e.style.right = "-" + (this.getW() + spaceing) + "px";
+				mainScreen.e.appendChild(this.e);
+			});
+
+			screen.clearScreen = function(){
+				var c = this.tetris.model.coord;
+				for(var i in c)
+				{
+					var x = c[i][0] + this.tetris.offset[0],
+						y = c[i][1] + this.tetris.offset[1];
+					this.sq(x,y).hide();
+				}
+			}
+			screen.tetris = {
+				next : function(){
+					if(!this.model)
+					{
+						this.c = parseInt(Math.random() * 4);
+						this.model = modelFactory.newModel();
+						this.model.setCoord(modelFactory.newCoord());
+						this.offset = [0,0];
+					}
+					//把模型坐标传给主屏幕
+					mainScreen.acceptModelData(this.c, this.model.coord);
+					//生成下个方块
+					this.hide();
+					this.c = parseInt(Math.random() * 4);
+					this.model.setCoord(modelFactory.newCoord());
+					this.offset = [
+						Math.floor((screen.c - this.model.size.w)/2),
+						Math.floor((screen.r - this.model.size.h)/2)
+					];
+					this.show();
+				},
+				rotate : function(){
+					var m = this.model;
+					if(m)
+					{
+						this.hide();
+						m.rotate90();
+						this.show();
+					}
+				},
+				show : function(){
+					var m = this.model;
+					if(m)
+					{
+						for(var i in m.coord)
+						{
+							var sq = m.coord[i];
+							screen.sq(sq[0] + this.offset[0],sq[1] + this.offset[1]).show(this.c);
+						}
+					}
+				},
+				hide : function(){
+					var m = this.model;
+					if(m)
+					{
+						for(var i in m.coord)
+						{
+							var sq = m.coord[i];
+							screen.sq(sq[0] + this.offset[0], sq[1] + this.offset[1]).hide(this.c);
+						}
+					}
+				}
+			}
+
+			return screen;
+		})()
+		//计分板
+		var scoreBoard = (function(){
+			var initLevel = 0,	//初始关数
+				level = 0,		//当前关数
+				score = 0,		//分数
+				lines = 0,		//已消除的行数
+				upgrade = 15;	//升级行数
+			return {
+				show : function(){
+					var e = util.dom.createElement("div");
+					e.className = "board";
+					e.style.top = (tipScreen.getH() + 30) + "px";
+					e.style.right = "-" + (tipScreen.getW() + spaceing) + "px";
+					e.style.width = tipScreen.getW() + "px";
+					var innerHTML = ["<div style='margin-top:10px'"];
+					innerHTML.push("	 class='scoreBoard'><div class='title'>关数</div><em id='level'>0</em></div>");
+					innerHTML.push("<div class='scoreBoard'><div class='title'>分数</div><em id='score'>0</em></div>");
+					innerHTML.push("<div class='scoreBoard'><div class='title'>行数</div><em id='lines'>0</em></div>");
+					e.innerHTML = innerHTML.join("");
+					mainScreen.e.appendChild(e);
+				},
+				getScore : function(){
+					return [score,lines];
+				},
+				setInitLevel : function(_initLevel){
+					initLevel = _initLevel;
+					scoreBoard.setLevel(_initLevel);
+				},
+				setLevel : function(_level)
+				{
+					level = _level;
+					util.$("level").innerHTML = level;
+					mainScreen.thread.setSpeed(1000 - level * 100 * 0.7);
+				},
+				setLines : function(_lines)
+				{
+					lines += _lines;
+					score += _lines * 100 + 15 + ((_lines == 0 || _lines == 1) ? 0 :
+						_lines == 2 ? 100 :
+						_lines == 3 ? 300 :
+						_lines == 4 ? 600 : 1000);
+					if(0 != _lines)
+					{
+						messageBox.showEliminate(_lines);
+						if(Math.floor(lines/upgrade) > (level - initLevel) && level < 13)
+						{
+							messageBox.showUpgrade();
+							scoreBoard.setLevel(level + 1);
+						}
+					}
+
+					util.$("lines").innerHTML = lines;
+					util.$("score").innerHTML = score;
+				},
+				clear : function(){
+					lines = 0;
+					score = 0;
+					util.$("lines").innerHTML = lines;
+					util.$("score").innerHTML = score;
+				}
+
+			}
+		})()
+		//开始、暂停按钮
+		var button = (function(){
+			var start = function(){
+				var l = levelBoard.getLevel(),
+					r = levelBoard.getR(),
+					c = levelBoard.getC();
+				if(r != mainScreen.r || c != mainScreen.c){
+					util.$("main").removeChild(mainScreen.e);
+					util.cache = {};
+					tetrisDesc.init(r,c);
+				}
+				if(mainScreen.thread.isAlive())
+					historyRecord.record(scoreBoard.getScore());
+				scoreBoard.clear();
+				scoreBoard.setInitLevel(l);
+
+				mainScreen.clearScreen();
+				messageBox.destroyGameOverMsg();
+				tipScreen.tetris.next();
+				mainScreen.thread.stop();
+				mainScreen.thread.start();
+				util.$("main").focus();
+			};
+			var pause = function(){
+				var t = mainScreen.thread;
+				if(t.isAlive())
+					t.isPause() ? t.goon() : t.pause();
+			}
+			var initEvent = function(){
+				util.$("start").onclick = function(){
+					start();
+				}
+				util.$("pause").onclick = function(){
+					pause();
+				}
+			}
+			return {
+				show : function(){
+					var e = util.dom.createElement("div");
+					e.className = "board";
+					e.style.bottom = "0px";
+					e.style.right = "-" + (tipScreen.getW() + spaceing) + "px";
+					e.style.width = tipScreen.getW() + "px";
+					var innerHTML = "<div style='margin-top:10px' class='btn' id='start'>开始</div>" +
+									"<div 						  class='btn' id='pause'>暂停</div>";
+					e.innerHTML = innerHTML;
+					mainScreen.e.appendChild(e);
+					initEvent();
+				},
+				start : start,
+				pause : pause
+			}
+		})()
+		//按键操作设置
+		var keyBoard = (function(){
+			var left = 37,
+				right = 39,
+				down = 40,
+				rotate = 38,
+				plummet = 32,
+				start = 65,
+				pause = 83;
+			var initEvent = function(){
+				util.$("main").onkeydown = function(event){
+					//非游戏状态，键盘默认事件才是有效的
+					var keyCode = util.getKeyCode(event),
+						isPause = mainScreen.thread.isPause(),
+						t = mainScreen.tetris;
+					switch(keyCode)
+					{
+						case left :		!isPause ? t.left() : "";		break;
+						case right : 	!isPause ? t.right() : "";		break;
+						case down :  	!isPause ? t.down() : "";		break;
+						case rotate : 	!isPause ? t.rotate() : "";		break;
+						case plummet : 	!isPause ? t.plummet() : "";	break;
+						case start :  	button.start();					break;
+						case pause : 	button.pause();
+					}
+					util.preventDefault(event);
+				};
+				var inputs = util.dom.getElementsByTagName("input");
+				var validCharCode = (function(){
+					// 16|17|32|37|38|39|40|[48-57]|[65-90]|[96-105]|[97-122];
+					var v = [16,17,32,37,38,39,40,48,49,50,51,52,53,54,55,56,57];
+					for(var i = 65; i <= 90; i++){
+						v.push(i);
+					}
+					for(var i = 96; i <= 105; i++){
+						v.push(i);
+					}
+					return v.join("-") + "-";
+				})()
+				for(var i in inputs){
+					inputs[i].onkeydown = function(event){
+						var keyCode = util.getKeyCode(event),
+							id = this.id;
+						util.preventDefault(event);
+						util.stopPropagation(event);
+						if(validCharCode.indexOf(keyCode + "-") < 0)
+							return;
+						switch(id)
+						{
+							case "key_left" :		left = keyCode;		break;
+							case "key_right" : 		right = keyCode;	break;
+							case "key_down" :  		down = keyCode;		break;
+							case "key_rotate" : 	rotate = keyCode;	break;
+							case "key_plummet" : 	plummet = keyCode;	break;
+							case "key_start" :  	start = keyCode;	break;
+							case "key_pause" : 		pause = keyCode;
+						}
+						this.value = fromCharCode(keyCode);
+					};
+				}
+			}
+			var fromCharCode = function(keyCode){
+				var string = String.fromCharCode(keyCode);
+				if(keyCode >= 96){
+					keyCode -= 48;
+					string = "小键盘" + String.fromCharCode(keyCode);
+				}
+				switch(keyCode){
+					case 16 : string = "shift";break;
+					case 17 : string = "ctrl"; break;
+					case 32 : string = "space";break;
+					case 37 : string = "方向键左";break;case 38 : string = "方向键上";break;
+					case 39 : string = "方向键右";break;case 40 : string = "方向键下";break;
+				}
+				return string;
+			}
+			return {
+				show : function(){
+					var e = util.dom.createElement("div");
+					e.id = "keyBoard";
+					e.className = "board";
+					e.style.bottom = "0px";
+					e.style.left = "-" + (tipScreen.getW() + spaceing) + "px";
+					e.style.width = tipScreen.getW() + "px";
+					var innerHTML = ["<div class='boardTitle'>按键设置</div>"];
+					innerHTML.push("<div class='value'><span>旋转：</span><input id='key_rotate' value='" + fromCharCode(rotate) + "'></input></div>");
+					innerHTML.push("<div class='value'><span>左移：</span><input id='key_left' value='" + fromCharCode(left) + "'></input></div>");
+					innerHTML.push("<div class='value'><span>右移：</span><input id='key_right' value='" + fromCharCode(right) + "'></input></div>");
+					innerHTML.push("<div class='value'><span>下跌：</span><input id='key_down' value='" + fromCharCode(down) + "'></input></div>");
+					innerHTML.push("<div class='value'><span>暴跌：</span><input id='key_plummet' value='" + fromCharCode(plummet) + "'></input></div>");
+					innerHTML.push("<div class='value'><span>开始：</span><input id='key_start' value='" + fromCharCode(start) + "'></input></div>");
+					innerHTML.push("<div class='value'><span>暂停：</span><input id='key_pause' value='" + fromCharCode(pause) + "'></input></div>");
+					e.innerHTML = innerHTML.join("");
+					mainScreen.e.appendChild(e);
+					initEvent();
+				}
+			}
+		})()
+		//积分榜
+		var historyRecord = (function(){
+			var topScores = [0,0,0],
+				topLines = [0,0,0];
+			return {
+				show : function(){
+					var e = util.dom.createElement("div");
+					e.id = "historyRecord";
+					e.className = "board";
+					e.style.top = "0px";
+					e.style.left = "-" + (tipScreen.getW() + spaceing) + "px";
+					e.style.width = tipScreen.getW() + "px";
+					e.style.height = "120px";
+					var innerHTML = ["<div class='boardTitle'>积分榜</div>"];
+					innerHTML.push("<div class='head'><span>排名</span><span>积分</span><span>行数</span></div>");
+					innerHTML.push("<div class='record'><span><em>1</em></span><span id='topScores0'>"+topScores[0]+"</span><span id='topLines0'>"+topLines[0]+"</span></div>");
+					innerHTML.push("<div class='record'><span><em>2</em></span><span id='topScores1'>"+topScores[1]+"</span><span id='topLines1'>"+topLines[1]+"</span></div>");
+					innerHTML.push("<div class='record'><span><em>3</em></span><span id='topScores2'>"+topScores[2]+"</span><span id='topLines2'>"+topLines[2]+"</span></div>");
+					e.innerHTML = innerHTML.join("");
+					mainScreen.e.appendChild(e);
+				},
+				record : function(scores){
+					for(var i in topScores){
+						if(scores[0] > topScores[i]){
+							for(var j = 2; j > i; j --){
+								topScores[j] = topScores[j-1];
+								util.$("topScores"+j).innerHTML = topScores[j-1];
+								util.$("topLines"+j).innerHTML = topLines[j-1];
+							}
+							topScores[i] = scores[0];
+							topLines[i] = scores[1];
+							util.$("topScores"+i).innerHTML = scores[0];
+							util.$("topLines"+i).innerHTML = scores[1];
+							break;
+						}
+					}
+				}
+			}
+		})()
+		//难易度设置
+		var levelBoard = (function(){
+			var level = 1,
+				r = mainScreen.r,
+				c = mainScreen.c;
+			var initLevel = [],
+				mainRow = [],
+				mainCell = [];
+			for(var i = 1; i <= 10; i ++){
+				initLevel.push("<option value='"+i+"'>"+i+"</option>");
+			}
+			for(var i = 10; i <= 30; i ++){
+				mainCell.push("<option value='"+i+"'>"+i+"</option>");
+			}
+			for(var i = 20; i <= 30; i ++){
+				mainRow.push("<option value='"+i+"'>"+i+"</option>");
+			}
+			var initEvent = function(){
+
+				util.$("initLevel").value = level;
+				util.$("mainCell").value = c;
+				util.$("mainRow").value = r;
+
+				util.$("initLevel").onchange = function(){
+					level = parseInt(this.value);
+				};
+				util.$("mainCell").onchange = function(){
+					c = parseInt(this.value);
+				};
+				util.$("mainRow").onchange = function(){
+					r = parseInt(this.value);
+				};
+			}
+			return {
+				getLevel : function(){
+					return level;
+				},
+				getR : function(){
+					return r;
+				},
+				getC : function(){
+					return c;
+				},
+				show : function(){
+					var e = util.dom.createElement("div");
+					e.id = "levelBoard";
+					e.className = "board";
+					e.style.top = "135px";
+					e.style.left = "-" + (tipScreen.getW() + spaceing) + "px";
+					e.style.width = tipScreen.getW() + "px";
+					e.style.height = "110px";
+					var innerHTML = ["<div class='boardTitle'>难易度设置</div>"];
+					innerHTML.push("<div class='value'><span>初始关数：</span><select id='initLevel'>"+initLevel+"</select></div>");
+					innerHTML.push("<div class='value'><span>屏幕宽度：</span><select id='mainCell'>"+mainCell+"</select></div>");
+					innerHTML.push("<div class='value'><span>屏幕高度：</span><select id='mainRow'>"+mainRow+"</select></div>");
+					e.innerHTML = innerHTML.join("");
+					mainScreen.e.appendChild(e);
+					initEvent();
+				}
+			}
+		})()
+		//顶部底部
+		var topBottomInfo = (function(){
+			return {
+				show : function(){
+					//顶部
+					var top = util.dom.createElement("div");
+					top.id = "topInfo";
+					top.innerHTML = "TETRIS";
+
+					//底部
+					var bottom = util.dom.createElement("div");
+					bottom.id = "bottomInfo";
+					bottom.innerHTML = "<div>俄罗斯方块网页版，如有兴趣，可以和我联系- - \n qq:372717320</div>";
+
+					mainScreen.e.appendChild(top);
+					mainScreen.e.appendChild(bottom);
+				}
+			}
+		})()
+
+		//消息提示框
+		var messageBox = (function(){
+			var gE = util.dom.createElement("div"),
+				isGEShow = false;
+			gE.className = "board gameOverMsg";
+			gE.innerHTML = "gameover";
+
+			var uE = util.dom.createElement("div");
+			uE.className = "board upgradeMsg";
+			uE.innerHTML = "升级";
+
+			var fE = util.dom.createElement("div");
+			fE.className = "board upgradeMsg";
+			fE.style.color = "red";
+			fE.style.backgroundColor = "#fff";
+			fE.style.width = "160px";
+			fE.style.top = "200px";
+			fE.style.marginLeft = "-80px";
+			return {
+				show : function(){
+					isGEShow = false;
+					mainScreen.e.appendChild(uE);
+					mainScreen.e.appendChild(fE);
+				},
+				showGameOver : function(){
+					mainScreen.e.appendChild(gE);
+					isGEShow = true;
+				},
+				showUpgrade : function(){
+					var time = 5;
+					(function(){
+						uE.style.filter = "alpha(opacity="+time * 20+")";
+						uE.style.opacity = time * 0.2;
+						if(time -- > 0)
+							setTimeout(arguments.callee,350);
+					})()
+				},
+				showEliminate : function(lines){
+					if(lines < 4)
+						return;
+					switch(lines){
+						case 1 : fE.innerHTML = "切，才消1行，加油！";	break;
+						case 2 : fE.innerHTML = "还行哦！消了2行";		break;
+						case 3 : fE.innerHTML = "哎呦，不错哦！消了3行";break;
+						case 4 : fE.innerHTML = "w o n d e r f u l";	break;
+					}
+					var time = 5;
+					(function(){
+						fE.style.filter = "alpha(opacity="+time * 20+")";
+						fE.style.opacity = time * 0.2;
+						if(time -- > 0)
+							setTimeout(arguments.callee,500);
+					})()
+				},
+				destroyGameOverMsg : function(){
+					if(isGEShow)
+						mainScreen.e.removeChild(gE);
+				}
+			}
+		})();
+
+		return {
+			init : function(r,c,l){
+				mainScreen.show(r,c,l);
+				tipScreen.show();
+				scoreBoard.show();
+				keyBoard.show();
+				levelBoard.show();
+				button.show();
+				historyRecord.show();
+				messageBox.show();
+				topBottomInfo.show();
+			}
+		};
+	})()
+
+	window.onload = function(e) {
+        tetrisDesc.init(20,10,22);
+    }
+</script>
+<head>
+<body>
+<div id="main" tabindex="1"></div>
+<div id="bar">
+    <ul>
+        <li class=""><a href="gobang.html" target="_blank">五子棋</a></li>
+        <li class="on"><a href="tetris.html" target="_blank">俄罗斯方块</a></li>
+        <li class=""><a href="shortest-A.html" target="_blank">最短路径</a></li>
+    </ul>
+</div>
+</body>
+</html>
